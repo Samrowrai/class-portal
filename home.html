@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">Home</div>
+    <div class="who">
+      <span id="who"></span>
+      <a href="index.html" id="logout-btn" class="logout">Log out</a>
+    </div>
+  </div>
+
+  <main>
+    <div class="notice" id="blocked-notice" style="display:none;">
+      That page is for signed-in members only. Sign in to open it.
+    </div>
+
+    <h2>Welcome back</h2>
+    <p style="color:var(--muted);">Here's what's available to you right now.</p>
+
+    <div class="grid">
+      <div class="tile">
+        <h3>Overview</h3>
+        <p>General information anyone can see, member or visitor.</p>
+        <a href="overview.html" class="go">Open →</a>
+      </div>
+
+      <div class="tile locked">
+        <h3>Reports</h3>
+        <p>Account activity and detailed reports for signed-in members.</p>
+        <a href="reports.html" class="go">Open →</a>
+      </div>
+
+      <div class="tile locked">
+        <h3>Settings</h3>
+        <p>Manage your profile and preferences.</p>
+        <a href="settings.html" class="go">Open →</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    requireAnySession();
+  </script>
+</body>
+</html>

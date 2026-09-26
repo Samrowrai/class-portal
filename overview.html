@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">Home</div>
+    <div class="who">
+      <span id="who"></span>
+      <a href="index.html" id="logout-btn" class="logout">Log out</a>
+    </div>
+  </div>
+
+  <main>
+    <div class="page-title-row">
+      <h2>Overview</h2>
+      <a href="home.html" class="back">← Back to home</a>
+    </div>
+    <p style="color:var(--muted); max-width:60ch; line-height:1.6;">
+      This page is open to everyone, including visitors. Put any general,
+      public-facing content here — an introduction, announcements, or
+      anything you don't need to gate behind sign-in.
+    </p>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    requireAnySession();
+  </script>
+</body>
+</html>
