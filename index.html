@@ -11,11 +11,11 @@
   <div class="login-wrap">
     <div class="login-card">
       <h1>Sign in</h1>
-      <p class="login-sub">Enter your ID and password to access your account.</p>
+      <p class="login-sub">Enter your student ID and password to access your account.</p>
 
       <form id="login-form" novalidate>
         <div class="field">
-          <label for="login-id">ID</label>
+          <label for="login-id">Student ID</label>
           <input type="text" id="login-id" autocomplete="username" required>
         </div>
         <div class="field">
@@ -26,12 +26,15 @@
         <button type="submit" class="btn btn-primary">Sign in</button>
       </form>
 
+      <p class="hint" style="text-align:center; margin:14px 0 0 0;">
+        No account yet? <a href="signup.html">Create one</a>
+      </p>
+
       <div class="divider">or</div>
 
       <a href="home.html" id="visitor-link" class="visitor-link">Continue as visitor</a>
 
       <p class="hint">
-        Demo credentials: <strong>demo</strong> / <strong>demo123</strong>.
         Visitors can view the home page but not the members-only pages.
       </p>
     </div>
