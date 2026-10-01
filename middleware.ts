@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+.env.local
+.env*.local
+.vercel
+seed/students.json
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,81 @@
+# Class Portal
+
+## A. Overview
+Class website with pre-stored student accounts, visitor mode, student profiles, and server-enforced page permissions.
+
+## B. Technology
+Next.js 14 (App Router) + TypeScript, PostgreSQL via Prisma, bcryptjs password hashing, signed httpOnly cookie sessions (jose). Plain CSS. PostgreSQL is used because Vercel's filesystem is not persistent; free options: Neon (Vercel Marketplace), Supabase.
+
+## C. Structure
+- `app/` pages; `app/(site)/` pages with navbar; `app/actions.ts` login/logout/profile server actions
+- `middleware.ts` route-level access control; `lib/access.ts` list of restricted paths
+- `lib/config.ts` nav, group links, routine, notices, headlines; `lib/profileFields.ts` profile fields
+- `lib/session.ts`, `lib/db.ts`; `prisma/` schema + seed; `seed/` student data; `public/images/` assets
+
+## D. Local installation
+```bash
+npm install
+cp .env.example .env.local   # then fill in values
+npm run db:push              # E. creates tables
+npm run db:seed              # G. creates students
+npm run dev                  # http://localhost:3000
+```
+
+## E. Database setup
+1. Create a PostgreSQL database (e.g. neon.tech, free) and copy its connection string.
+2. Put it in `.env.local` as `DATABASE_URL`, then run `npm run db:push`.
+Run the same two commands against the production database (set `DATABASE_URL` to the production string in your terminal for that run) before first use.
+
+## F. Environment variables
+| Name | Purpose |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `SESSION_SECRET` | 32+ random chars (`openssl rand -base64 48`) |
+
+Local: `.env.local` (git-ignored). Production: Vercel → Project → Settings → Environment Variables (add both for Production/Preview). Neither is ever sent to the browser.
+
+## G/M. Creating / adding students
+`cp seed/students.example.json seed/students.json` (git-ignored), edit the list (`studentId`, `name`, `password`), run `npm run db:seed`. Passwords are bcrypt-hashed before saving. Re-running updates existing students and adds new ones. Never commit `seed/students.json`.
+
+## H. Login
+Name, Student ID and Password are submitted. The Student ID + password are checked against the hash in the database (the Name field is required but not used for verification). Failure always shows "Invalid Student ID or Password." Success sets a signed, httpOnly cookie.
+
+## I. Visitor mode
+"Continue as Visitor" sets a signed cookie with role `visitor` (no account).
+
+## J. Permissions
+`middleware.ts` rejects visitors on every path in `lib/access.ts` with HTTP 403 and "Access Denied."; each restricted page re-checks on the server, and the profile action takes the student's identity only from the signed cookie (never from the form), so student A cannot edit student B. To restrict a new page, add its path to `RESTRICTED`.
+
+## K/L. Logo and backgrounds
+Replace `public/images/logo.png`, `login-background.jpg`, `home-background.jpg` (keep names). Current files are placeholders. Headlines: `lib/config.ts`.
+
+## N. Add profile fields
+Add an entry to `PROFILE_FIELDS` in `lib/profileFields.ts`. Form, validation and Bio page update automatically; no migration needed (stored as JSON).
+
+## O. Group links
+Edit `groupLinks` in `lib/config.ts`.
+
+## P. New pages
+Create `app/(site)/your-page/page.tsx`, add it to `nav` in `lib/config.ts`. If student-only, add the path to `lib/access.ts` and start the page with `if (!(await getStudentSession())) return <AccessDenied />;` (copy `groups/page.tsx`).
+
+## Q. Push to GitHub
+Create an empty repo on github.com, then:
+```bash
+git init && git add . && git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/YOU/REPO.git
+git push -u origin main
+```
+Confirm `.env.local` and `seed/students.json` are NOT in the repo.
+
+## R–T. Connect to Vercel and deploy
+1. vercel.com → Add New → Project → import the GitHub repo (framework auto-detects Next.js).
+2. Add `DATABASE_URL` and `SESSION_SECRET` under Environment Variables.
+3. Make sure tables exist (section E) and students are seeded, then click Deploy.
+4. Test the deployed URL (login, visitor, restricted URLs directly).
+
+## U. Updating
+Edit code → `git add . && git commit -m "msg" && git push`. Vercel redeploys automatically. If you change `prisma/schema.prisma`, run `npm run db:push` against production too.
+
+## Notes / next steps
+No login rate limiting yet (add e.g. Upstash Ratelimit before wide use). Notices/routine live in `lib/config.ts`; move to database tables when you need an admin UI.

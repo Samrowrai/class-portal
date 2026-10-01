@@ -1,0 +1,18 @@
+import { redirect } from "next/navigation";
+import LoginForm from "@/components/LoginForm";
+import { getSession } from "@/lib/session";
+import { siteConfig } from "@/lib/config";
+
+export default async function LoginPage() {
+  if (await getSession()) redirect("/home");
+  return (
+    <main className="login">
+      <img className="login-logo" src="/images/logo.png" alt="School logo" />
+      <section className="login-box">
+        <h1>{siteConfig.loginHeadline}</h1>
+        <p>{siteConfig.loginSubtext}</p>
+        <LoginForm />
+      </section>
+    </main>
+  );
+}
